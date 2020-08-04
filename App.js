@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
+const Schema = mongoose.Schema; // -------------------------
+
 const app = express();
 
 
@@ -22,6 +24,13 @@ mongoose.connect(`mongodb+srv://${login}:${password}@cluster0.m8p3z.mongodb.net/
 }, () => {console.log("Db start")});
 
 
+const userScheme = new Schema({
+    name: String
+});
+
+const cardScheme = new Schema({
+    text: String
+});
 
 /* const uri = `mongodb+srv://${login}:${password}>@cluster0.m8p3z.mongodb.net/${dbname}?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true });
@@ -31,10 +40,40 @@ client.connect(err => {
   client.close();
 }); */
 
-
-
-
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+
+
+
+
+
+const User = mongoose.model("User", userScheme);
+const user = new User({
+    name: "Nekto"
+});
+
+user.save(function(err){
+
+    if (err) return console.log(err);
+    console.log("Save user", user);
+});
+
+
+
+const Card = mongoose.model("Card", cardScheme);
+const card = new Card({
+    text: "Hi"
+});
+
+card.save(function(err){
+
+    if (err) return console.log(err);
+    console.log("Save card", card);
+});
+
+
+
+
+
 
 
 
