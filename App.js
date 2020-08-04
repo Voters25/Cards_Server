@@ -24,65 +24,68 @@ mongoose.connect(`mongodb+srv://${login}:${password}@cluster0.m8p3z.mongodb.net/
 }, () => {console.log("Db start")});
 
 
+// Схемы
 const userScheme = new Schema({
     name: String
 });
-
 const cardScheme = new Schema({
     text: String
 });
 
-/* const uri = `mongodb+srv://${login}:${password}>@cluster0.m8p3z.mongodb.net/${dbname}?retryWrites=true&w=majority`;
-const client = new MongoClient(uri, { useNewUrlParser: true });
-client.connect(err => {
-  const collection = client.db("test").collection("devices");
-  // perform actions on the collection object
-  client.close();
-}); */
+
 
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 
 
 
 
-
+// Сохранение в базу
 const User = mongoose.model("User", userScheme);
 const user = new User({
     name: "Nekto"
 });
-
-user.save(function(err){
+/* user.save(function(err){
 
     if (err) return console.log(err);
     console.log("Save user", user);
-});
+}); */
 
 
-
+// Сохранение в базу
 const Card = mongoose.model("Card", cardScheme);
 const card = new Card({
     text: "Hi"
 });
-
-card.save(function(err){
+/* card.save(function(err){
 
     if (err) return console.log(err);
     console.log("Save card", card);
-});
+}); */
 
 
 
 
 
+User.find(function(err, doc){
+    mongoose.disconnect();
+    if (err) return console.log(err);
+    console.log(doc);
+})
+
+User.findOne({name: 'Daniil'}, function(err, doc){
+    mongoose.disconnect();
+    if (err) return console.log(err);
+    console.log(doc);
+})
 
 
 
 
-app.get('/test', function(req, res) {
+/* app.get('/test', function(req, res) {
     try {
         res.send('succses');
         console.log('succses');
     } catch (e) {
         console.log(e);
     }
-})
+}) */
