@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const { text } = require('body-parser');
 
 const Schema = mongoose.Schema; // -------------------------
 
@@ -33,6 +34,12 @@ const cardScheme = new Schema({
 });
 
 
+const cardContentSheme = new Schema({
+    Title: String,
+    Content: String
+})
+
+
 
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 
@@ -61,6 +68,20 @@ const card = new Card({
     if (err) return console.log(err);
     console.log("Save card", card);
 }); */
+
+
+const CardContent = mongoose.model("CardContent", cardContentSheme);
+const cardContent = new CardContent({
+    Title: 'Test title',
+    Content: 'Test content.................................'
+})
+cardContent.save(function(err){
+
+    if (err) return console.log(err);
+    console.log("Save card", cardContent);
+});
+
+
 
 
 
