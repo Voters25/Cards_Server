@@ -26,15 +26,12 @@ mongoose.connect(`mongodb+srv://${login}:${password}@cluster0.m8p3z.mongodb.net/
 
 
 // Схемы
-const userScheme = new Schema({
+/* const userScheme = new Schema({
     name: String
-});
-const cardScheme = new Schema({
-    text: String
-});
+}); */
 
 
-const cardContentSheme = new Schema({
+const cardSheme = new Schema({
     Title: String,
     Content: String
 })
@@ -47,10 +44,10 @@ app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 
 
 // Сохранение в базу
-const User = mongoose.model("User", userScheme);
+/* const User = mongoose.model("User", userScheme);
 const user = new User({
     name: "Nekto"
-});
+}); */
 /* user.save(function(err){
 
     if (err) return console.log(err);
@@ -58,11 +55,13 @@ const user = new User({
 }); */
 
 
-// Сохранение в базу
-const Card = mongoose.model("Card", cardScheme);
+
+
+const Card = mongoose.model("Card", cardSheme);
 const card = new Card({
-    text: "Hi"
-});
+    Title: 'Test title',
+    Content: 'Test content.................................'
+})
 /* card.save(function(err){
 
     if (err) return console.log(err);
@@ -70,43 +69,52 @@ const card = new Card({
 }); */
 
 
-const CardContent = mongoose.model("CardContent", cardContentSheme);
-const cardContent = new CardContent({
-    Title: 'Test title',
-    Content: 'Test content.................................'
-})
-cardContent.save(function(err){
-
-    if (err) return console.log(err);
-    console.log("Save card", cardContent);
-});
 
 
 
 
 
-
-
-User.find(function(err, doc){
+/* User.find(function(err, doc){
     mongoose.disconnect();
     if (err) return console.log(err);
     console.log(doc);
-})
+}) */
 
-User.findOne({name: 'Daniil'}, function(err, doc){
+/* User.findOne({name: 'Daniil'}, function(err, doc){
     mongoose.disconnect();
     if (err) return console.log(err);
     console.log(doc);
+}) */
+
+
+/* Card.find(function(err, res){
+
+    if (err) {
+        res.send('Server error: ' + err);
+    }
+
+    console.log(res);
 })
+ */
 
 
 
 
-/* app.get('/test', function(req, res) {
+app.get('/list', (req, res) => {
     try {
-        res.send('succses');
-        console.log('succses');
+
+        Card.find(function(err, result){
+
+            if (err) {
+                res.send('Server error: ' + err);
+            }
+
+            console.log(result);
+            res.send(result);
+        })
+
+        //res.send(result);
     } catch (e) {
         console.log(e);
     }
-}) */
+})
