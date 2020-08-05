@@ -102,18 +102,29 @@ const card = new Card({
 
 app.get('/list', (req, res) => {
     try {
-
         Card.find(function(err, result){
-
             if (err) {
                 res.send('Server error: ' + err);
             }
-
             console.log(result);
             res.send(result);
         })
-
         //res.send(result);
+    } catch (e) {
+        console.log(e);
+    }
+})
+
+app.get('/card/:id', (req, res) => {
+    try {
+        //console.log(req.params.id);
+        Card.findById(req.params.id, function(err, result){
+            if (err) {
+                res.send('Server error: ' + err);
+            }
+            console.log(result);
+            res.send(result);
+        })
     } catch (e) {
         console.log(e);
     }
