@@ -58,10 +58,10 @@ const user = new User({
 
 
 const Card = mongoose.model("Card", cardSheme);
-const card = new Card({
+/* const card = new Card({
     Title: 'Test title',
     Content: 'Test content.................................'
-})
+}) */
 /* card.save(function(err){
 
     if (err) return console.log(err);
@@ -124,6 +124,43 @@ app.get('/card/:id', (req, res) => {
             }
             console.log(result);
             res.send(result);
+        })
+    } catch (e) {
+        console.log(e);
+    }
+})
+
+app.get('/delete/:id', (req, res) => {
+    try {
+        Card.findByIdAndDelete(req.params.id, function(err, result){
+            if (err) {
+                res.send('Server error: ' + err);
+            }
+            //console.log(result);
+            res.send('Card delete');
+        })
+    } catch (e) {
+        console.log(e);
+    }
+})
+
+app.post('/edit', (req, res) => { // ПРОТЕСТИ
+    try {
+        Card.findByIdAndDelete(req.body.id, function(err, result){
+            if (err) {
+                res.send('Server error: ' + err);
+            } else {
+                const card = new Card({
+                    Title: req.body.Title,
+                    Content:req.body.Content
+                })
+                card.save(function(err){
+    
+                    if (err) return console.log(err);
+                    console.log("Save card", card);
+                });
+            }
+            res.send('Save card');
         })
     } catch (e) {
         console.log(e);
