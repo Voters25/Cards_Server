@@ -146,22 +146,42 @@ app.get('/delete/:id', (req, res) => {
 
 app.post('/edit', (req, res) => { // ПРОТЕСТИ
     try {
-        Card.findByIdAndDelete(req.body.id, function(err, result){
+        Card.findByIdAndDelete(req.body.id, function (err, result) {
             if (err) {
                 res.send('Server error: ' + err);
-            } else {
-                const card = new Card({
-                    Title: req.body.Title,
-                    Content:req.body.Content
-                })
-                card.save(function(err){
-    
-                    if (err) return console.log(err);
-                    console.log("Save card", card);
-                });
             }
+            const card = new Card({
+                Title: req.body.Title,
+                Content: req.body.Content
+            })
+            card.save(function (err) {
+                if (err) return console.log(err);
+                console.log("Save card", card);
+            });
             res.send('Save card');
         })
+    } catch (e) {
+        console.log(e);
+    }
+})
+
+app.post('/create', (req, res) => { // ПРОТЕСТИ
+    console.log(req);
+    try {
+
+        const Title = req.body.Title;
+        const Content = req.body.Content;
+
+        const card = new Card({
+            Title: Title,
+            Content: Content
+        })
+
+        card.save(function (err) {
+            if (err) return console.log(err);
+            console.log("Save card", card);
+        });
+        res.send('Save card');
     } catch (e) {
         console.log(e);
     }
