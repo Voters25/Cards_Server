@@ -37,7 +37,9 @@ mongoose.connect(`mongodb+srv://${login}:${password}@cluster0.m8p3z.mongodb.net/
 
 const cardSheme = new Schema({
     Title: String,
-    Content: String
+    Content: String,
+    Tag: String,
+    Date: String,
 })
 
 
@@ -161,8 +163,10 @@ app.post('/edit', (req, res) => { // ПРОТЕСТИ
                 res.send('Server error: ' + err);
             }
             const card = new Card({
-                Title: req.body.Title,
-                Content: req.body.Content
+                Title: req.body.title,
+                Content: req.body.content,
+                Tag: req.body.tag,
+                Date: req.body.date
             })
             card.save(function (err) {
                 if (err) return console.log(err);
@@ -180,10 +184,14 @@ app.post('/create', (req, res) => { // ПРОТЕСТИ
 
         const Title = req.body.title;
         const Content = req.body.content;
+        const Tag = req.body.tag;
+        const Date = req.body.date;
 
         const card = new Card({
             Title: Title,
-            Content: Content
+            Content: Content,
+            Tag: Tag,
+            Date: Date
         })
 
         card.save(function (err) {
