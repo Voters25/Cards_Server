@@ -3,7 +3,11 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const cookieSession = require('cookie-session');
+//const cookieSession = require('cookie-session');
+const multipart = require('connect-multiparty');
+const multipartMiddleware = multipart();
+
+
 
 const Schema = mongoose.Schema; // -------------------------
 
@@ -38,13 +42,9 @@ const cardSheme = new Schema({
 
 
 
-//app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 
-app.use(cookieSession({
-    name: 'session',
-    keys: ['secret']
-}))
+app.use(multipartMiddleware);
 
 //app.use(require('connect').bodyParser());
 app.use(bodyParser.urlencoded({
