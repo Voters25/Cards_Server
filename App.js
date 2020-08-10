@@ -120,7 +120,9 @@ app.get('/list', (req, res) => {
             }
             let tags = []
             cardList.map(element => {
-                tags.push(element.Tag);
+                if (element.Tag !== '' && !null) {
+                    tags.push(element.Tag);
+                }
             });
             let tagList = Array.from(new Set(tags));
 
