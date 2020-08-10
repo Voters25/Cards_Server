@@ -114,18 +114,27 @@ const Card = mongoose.model("Card", cardSheme);
 
 app.get('/list', (req, res) => {
     try {
-        Card.find(function(err, result){
+        Card.find(function(err, cardList){
             if (err) {
                 res.send('Server error: ' + err);
             }
-            console.log(result);
-            res.send(result);
+            let tags = []
+            cardList.map(element => {
+                tags.push(element.Tag);
+            });
+            let tagList = Array.from(new Set(tags));
+
+            console.log(tagList);
+            console.log(cardList);
+            res.send({cardList, tagList});
         })
         //res.send(result);
     } catch (e) {
         console.log(e);
     }
 })
+
+
 
 app.get('/card/:id', (req, res) => {
     try {
