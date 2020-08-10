@@ -112,6 +112,7 @@ const Card = mongoose.model("Card", cardSheme);
 
 
 
+
 app.get('/list', (req, res) => {
     try {
         Card.find(function(err, cardList){
@@ -125,11 +126,40 @@ app.get('/list', (req, res) => {
                 }
             });
             let tagList = Array.from(new Set(tags));
-
+            
             console.log(tagList);
             console.log(cardList);
             res.send({cardList, tagList});
         })
+        //res.send(result);
+    } catch (e) {
+        console.log(e);
+    }
+})
+
+app.get('/byTag/:tag', (req, res) => {
+    try {
+        Card.find({'Tag': req.params.tag}, function(err, cardList){
+            if (err) {
+                res.send('Server error: ' + err);
+            }
+
+            Card.find(function(err, list){
+                if (err) {
+                    res.send('Server error: ' + err);
+                }
+                let tags = []
+                list.map(element => {
+                    if (element.Tag !== '' && !null) {
+                        tags.push(element.Tag);
+                    }
+                });
+                let tagList = Array.from(new Set(tags));
+
+                res.send({cardList, tagList});
+            })
+        })
+
         //res.send(result);
     } catch (e) {
         console.log(e);
