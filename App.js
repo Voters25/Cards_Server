@@ -126,6 +126,7 @@ app.get('/list', (req, res) => {
                 }
             });
             let tagList = Array.from(new Set(tags));
+            tagList.sort();
             
             console.log(tagList);
             console.log(cardList);
@@ -155,6 +156,7 @@ app.get('/byTag/:tag', (req, res) => {
                     }
                 });
                 let tagList = Array.from(new Set(tags));
+                tagList.sort();
 
                 res.send({cardList, tagList});
             })
