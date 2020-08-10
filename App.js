@@ -153,7 +153,7 @@ app.get('/delete/:id', (req, res) => {
 
 
 
-app.post('/edit', (req, res) => { // ПРОТЕСТИ
+app.post('/edit', (req, res) => {
     try {
 
         const Id = req.body.id;
@@ -177,7 +177,7 @@ app.post('/edit', (req, res) => { // ПРОТЕСТИ
     }
 })
 
-app.post('/create', (req, res) => { // ПРОТЕСТИ
+app.post('/create', (req, res) => {
     try {
 
         const Title = req.body.title;
