@@ -55,59 +55,10 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 
-// Сохранение в базу
-/* const User = mongoose.model("User", userScheme);
-const user = new User({
-    name: "Nekto"
-}); */
-/* user.save(function(err){
-
-    if (err) return console.log(err);
-    console.log("Save user", user);
-}); */
-
 
 
 
 const Card = mongoose.model("Card", cardSheme);
-/* const card = new Card({
-    Title: 'Test title',
-    Content: 'Test content.................................'
-}) */
-/* card.save(function(err){
-
-    if (err) return console.log(err);
-    console.log("Save card", card);
-}); */
-
-
-
-
-
-
-
-/* User.find(function(err, doc){
-    mongoose.disconnect();
-    if (err) return console.log(err);
-    console.log(doc);
-}) */
-
-/* User.findOne({name: 'Daniil'}, function(err, doc){
-    mongoose.disconnect();
-    if (err) return console.log(err);
-    console.log(doc);
-}) */
-
-
-/* Card.find(function(err, res){
-
-    if (err) {
-        res.send('Server error: ' + err);
-    }
-
-    console.log(res);
-})
- */
 
 
 
