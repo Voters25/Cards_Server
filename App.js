@@ -150,22 +150,26 @@ app.get('/delete/:id', (req, res) => {
     }
 })
 
+
+
+
 app.post('/edit', (req, res) => { // ПРОТЕСТИ
     try {
-        Card.findByIdAndDelete(req.body.id, function (err, result) {
+
+        const Id = req.body.id;
+        const Title = req.body.title;
+        const Content = req.body.content;
+        const Tag = req.body.tag;
+        const Date = req.body.date;
+
+
+        Card.findByIdAndUpdate(Id,
+            { _id: Id, Title: Title, Content: Content, Tag: Tag, Date: Date},
+            {new: true},
+            function (err, result) {
             if (err) {
                 res.send('Server error: ' + err);
             }
-            const card = new Card({
-                Title: req.body.title,
-                Content: req.body.content,
-                Tag: req.body.tag,
-                Date: req.body.date
-            })
-            card.save(function (err) {
-                if (err) return console.log(err);
-                console.log("Save card", card);
-            });
             res.send('Save card');
         })
     } catch (e) {
