@@ -72,7 +72,7 @@ app.get('/list', (req, res) => {
             }
             let tags = []
             cardList.map(element => {
-                if (element.Tag !== '' && !null) {
+                if (element.Tag !== '') {
                     tags.push(element.Tag);
                 }
             });
@@ -102,7 +102,7 @@ app.get('/byTag/:tag', (req, res) => {
                 }
                 let tags = []
                 list.map(element => {
-                    if (element.Tag !== '' && !null) {
+                    if (element.Tag !== '') {
                         tags.push(element.Tag);
                     }
                 });
