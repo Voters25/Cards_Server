@@ -6,6 +6,8 @@ const cors = require('cors');
 //const cookieSession = require('cookie-session');
 const multipart = require('connect-multiparty');
 const multipartMiddleware = multipart();
+const bcrypt = require('bcrypt');
+const passport = require('passport');
 
 
 
@@ -41,7 +43,10 @@ const cardSheme = new Schema({
     Tag: String,
     Date: String,
 })
-
+const userSheme = new Schema({
+    Email: String,
+    Password: String
+})
 
 
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
@@ -56,10 +61,89 @@ app.use(bodyParser.json());
 
 
 
-
-
 const Card = mongoose.model("Card", cardSheme);
+const User = mongoose.model("User", userSheme);
 
+
+
+//let passwordUser = 'test11userPass';
+//let salt = bcrypt.genSaltSync(10); // создаем соль
+//let passwordToSave = bcrypt.hashSync(passwordUser, salt); // шифруем пароль
+//console.log(salt);
+//console.log(passwordUser);
+//console.log(passwordToSave);
+
+/* app.post('/LogIn', (req, res) => {
+    try {
+
+        const email = req.body.email;
+        const password = req.body.password;
+
+        passport.authenticate('local', {
+            failureMessage: true
+        }, function(err, user, info) {
+            if (err) { return next(err); }
+            if (!user) { return res.status(500).send('Error'); }
+            req.
+        })
+
+        
+    } catch (e) {
+        console.log(e);
+    }
+}) */
+
+app.post('/Registration', (req, res) => {
+    try {
+        const email = req.body.email;
+        const password = req.body.password;
+        const passwordTwo = req.body.passwordTwo;
+
+        if (/^(([^<>()\[\]\\.,:\s@"]+(\.[^<>()\[\]\\.,:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i.test(email) && password.trim() && passwordTwo.trim() && password.trim() === passwordTwo.trim()) {
+            const user = new User({
+                Email: email,
+                Password: password
+            })
+            bcrypt.genSalt(10, function(err, salt) {
+                bcrypt.hash(user.Password, salt, function(err, hash) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    user.Password = hash
+                    user.save(function(err) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            res.send('Reg succses');
+                        }
+                    })
+
+                })
+
+            })
+
+        } else {
+            res.status(500).send('Error');
+        }
+        
+
+    } catch (e) {
+        console.log(e);
+    }
+})
+
+/* app.get('/LogOut', (req, res) => {
+    try {
+        
+
+
+
+        })
+        //res.send('Succses');
+    } catch (e) {
+        console.log(e);
+    }
+}) */
 
 
 
