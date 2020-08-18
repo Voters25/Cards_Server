@@ -1,17 +1,21 @@
 const express = require('express');
-//const MongoClient = require('mongodb').MongoClient;
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
-//const cookieSession = require('cookie-session');
+const cookieSession = require('cookie-session');
 const multipart = require('connect-multiparty');
 const multipartMiddleware = multipart();
 const bcrypt = require('bcrypt');
 const passport = require('passport');
+const session = require('express-session');
 
+//--------
+const LocalStrategy = require('passport-local').Strategy;
+//--------
 
+//const Schema = mongoose.Schema;
+const router = express.Router();
 
-const Schema = mongoose.Schema; // -------------------------
 
 const app = express();
 
@@ -31,67 +35,110 @@ mongoose.connect(`mongodb+srv://${login}:${password}@cluster0.m8p3z.mongodb.net/
 }, () => {console.log("Db start")});
 
 
-// Схемы
-/* const userScheme = new Schema({
-    name: String
-}); */
-
-
-const cardSheme = new Schema({
-    Title: String,
-    Content: String,
-    Tag: String,
-    Date: String,
-})
-const userSheme = new Schema({
-    Email: String,
-    Password: String
-})
 
 
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
-
 app.use(multipartMiddleware);
-
-//app.use(require('connect').bodyParser());
 app.use(bodyParser.urlencoded({
     extended: false
 }));
 app.use(bodyParser.json());
 
 
+app.use(passport.initialize());
+app.use(passport.session());
 
-const Card = mongoose.model("Card", cardSheme);
-const User = mongoose.model("User", userSheme);
+//let passportMiddlware = require('./passport/passport.js');
+
+const User = require('./model/user')
+const Card = require('./model/card')
+
+//const Card = mongoose.model("Card", cardSheme);
+//const User = mongoose.model("User", userSheme);
 
 
+app.use(cookieSession({
+    name: 'session',
+    keys: ['secret'],
+}))
 
-//let passwordUser = 'test11userPass';
-//let salt = bcrypt.genSaltSync(10); // создаем соль
-//let passwordToSave = bcrypt.hashSync(passwordUser, salt); // шифруем пароль
-//console.log(salt);
-//console.log(passwordUser);
-//console.log(passwordToSave);
+/* const expressSession = require('express-session')({
+    secret: 'secret',
+    resave: false,
+    saveUninitialized: false
+  }); */
 
-/* app.post('/LogIn', (req, res) => {
-    try {
+/* app.use(session({
+    secret: 'secret',
+    resave: false,
+    saveUninitialized: false
+})) */
 
-        const email = req.body.email;
-        const password = req.body.password;
+/*=========================================================================*/
 
-        passport.authenticate('local', {
-            failureMessage: true
-        }, function(err, user, info) {
-            if (err) { return next(err); }
-            if (!user) { return res.status(500).send('Error'); }
-            req.
+/*=========================================================================*/
+
+
+// Local Strategy
+passport.use(new LocalStrategy({ usernameField: 'email' },
+function (email, password, done) {
+    console.log('strategy work!!!!')
+    // Match Username
+    let query = {
+        email: email
+    };
+    console.log(query)//=========================================-=-=-==-=-=-=-=-=-=-=-=-==-=-=-=
+    User.findOne(query, function (err, user) {
+        if (err) throw err;
+        if (!user) {
+            return done(null, false, {
+                message: 'User undefined'
+            });
+        }
+        // Match Password
+        bcrypt.compare(password, user.password, function (err, isMatch) {
+            if (err) throw err;
+            if (isMatch) {
+                return done(null, user);
+            } else {
+                return done(null, false, {
+                    message: 'Incorrect password'
+                });
+            }
+        });
+    });
+}));
+
+
+passport.serializeUser(function (user, done) {
+    done(null, user.id);
+});
+
+passport.deserializeUser(function (id, done) {
+    User.findById(id, function (err, user) {
+        done(err, user);
+    });
+});
+
+app.post('/Login', function (req, res, next) {
+
+        passport.authenticate('local', { failureMessage: true },
+        function (err, user, info) {
+
+            if (err) {
+                return next(err);
+            }
+            if (!user) {
+                return res.status(500).send('Error.');
+            }
+            req.logIn(user, function (err) {
+                console.log(req.user);
+                res.send({ email: req.user.email })
+            })
         })
+        (req, res, next);
+})
 
-        
-    } catch (e) {
-        console.log(e);
-    }
-}) */
 
 app.post('/Registration', (req, res) => {
     try {
@@ -101,15 +148,15 @@ app.post('/Registration', (req, res) => {
 
         if (/^(([^<>()\[\]\\.,:\s@"]+(\.[^<>()\[\]\\.,:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i.test(email) && password.trim() && passwordTwo.trim() && password.trim() === passwordTwo.trim()) {
             const user = new User({
-                Email: email,
-                Password: password
+                email: email,
+                password: password
             })
             bcrypt.genSalt(10, function(err, salt) {
-                bcrypt.hash(user.Password, salt, function(err, hash) {
+                bcrypt.hash(user.password, salt, function(err, hash) {
                     if (err) {
                         console.log(err);
                     }
-                    user.Password = hash
+                    user.password = hash
                     user.save(function(err) {
                         if (err) {
                             console.log(err);
@@ -123,7 +170,7 @@ app.post('/Registration', (req, res) => {
             })
 
         } else {
-            res.status(500).send('Error');
+            res.status(500).send('Error.');
         }
         
 
@@ -132,18 +179,16 @@ app.post('/Registration', (req, res) => {
     }
 })
 
-/* app.get('/LogOut', (req, res) => {
+router.get('/LogOut', (req, res) => {
     try {
         
-
-
-
-        })
-        //res.send('Succses');
+        req.logOut();
+        res.send('Succses');
+        
     } catch (e) {
         console.log(e);
     }
-}) */
+})
 
 
 
@@ -285,3 +330,7 @@ app.post('/create', (req, res) => {
         console.log(e);
     }
 })
+
+
+
+module.exports = router
