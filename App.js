@@ -62,6 +62,8 @@ app.use(cookieSession({
     keys: ['secret'],
 }))
 
+//require('./passport/passport')(passport);
+
 /* const expressSession = require('express-session')({
     secret: 'secret',
     resave: false,
@@ -75,6 +77,9 @@ app.use(cookieSession({
 })) */
 
 /*=========================================================================*/
+
+        //  ПЕРЕД ЛЮБЫМИ ЗАПРОСАМИ ПРОВЕРЯЙ req.user , если true то ищи его лист и прочие действия...
+        //  И сделай листы каждого юзера отдельно. (Может массив с карточками внутри самого юзера)
 
 /*=========================================================================*/
 
@@ -114,7 +119,7 @@ passport.serializeUser(function (user, done) {
     done(null, user.id);
 });
 
-passport.deserializeUser(function (id, done) {
+passport.deserializeUser(function (id, done) { // НЕ ОТРАБАТЫВАЕТ!!!
     User.findById(id, function (err, user) {
         done(err, user);
     });
@@ -179,15 +184,13 @@ app.post('/Registration', (req, res) => {
     }
 })
 
-router.get('/LogOut', (req, res) => {
-    try {
-        
-        req.logOut();
+app.get('/Logout', function (req, res) {
+
+        //req.logout();
+        //req.session.destroy();
+        req.session = null;
         res.send('Succses');
-        
-    } catch (e) {
-        console.log(e);
-    }
+
 })
 
 
