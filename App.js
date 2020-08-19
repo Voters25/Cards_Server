@@ -2,7 +2,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
-//const cookieSession = require('cookie-session');
 const multipart = require('connect-multiparty');
 const multipartMiddleware = multipart();
 const bcrypt = require('bcrypt');
@@ -13,12 +12,8 @@ const session = require('express-session');
 const LocalStrategy = require('passport-local').Strategy;
 //--------
 
-//const Schema = mongoose.Schema;
-const router = express.Router();
-
 
 const app = express();
-
 
 const port = 5000;
 app.listen(port, () => {
@@ -34,9 +29,6 @@ mongoose.connect(`mongodb+srv://${login}:${password}@cluster0.m8p3z.mongodb.net/
     useNewUrlParser: true
 }, () => {console.log("Db start")});
 
-
-
-
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 app.use(multipartMiddleware);
 app.use(bodyParser.urlencoded({
@@ -48,20 +40,8 @@ app.use(session({ secret: 'anything' }));
 app.use(passport.initialize());
 app.use(passport.session());
 
-//let passportMiddlware = require('./passport/passport.js');
-
 const User = require('./model/user')
 const Card = require('./model/card')
-
-//const Card = mongoose.model("Card", cardSheme);
-//const User = mongoose.model("User", userSheme);
-
-
-/* app.use(cookieSession({
-    name: 'session',
-    keys: ['secret'],
-})) */
-
 
 /* app.use(session({
     secret: 'secret',
@@ -70,12 +50,6 @@ const Card = require('./model/card')
 })) */
 
 /*=========================================================================*/
-
-        //  ПЕРЕД ЛЮБЫМИ ЗАПРОСАМИ ПРОВЕРЯЙ req.user , если true то ищи его лист и прочие действия...
-        //  И сделай листы каждого юзера отдельно. (Может массив с карточками внутри самого юзера)
-
-/*=========================================================================*/
-
 
 // Local Strategy
 passport.use(new LocalStrategy({ usernameField: 'email' },
@@ -117,6 +91,13 @@ passport.deserializeUser(function (id, done) { // НЕ ОТРАБАТЫВАЕТ!
         done(err, user);
     });
 });
+
+/*=========================================================================*/
+
+
+
+
+
 
 app.post('/Login', function (req, res, next) {
 
@@ -178,18 +159,14 @@ app.post('/Registration', (req, res) => {
 })
 
 app.get('/Logout', function (req, res) {
-
         req.logout();
-        //req.session.destroy();
-        //req.session = null;
         res.send('Succses');
-
 })
 
 
 
 
-app.get('/list', (req, res) => {    // DONE
+app.get('/list', (req, res) => {
     try {
         if (req.user) {
             Card.find({'User': req.user.id}, function(err, cardList){
@@ -218,7 +195,7 @@ app.get('/list', (req, res) => {    // DONE
     }
 })
 
-app.get('/byTag/:tag', (req, res) => {    // DONE
+app.get('/byTag/:tag', (req, res) => {
     try {
         if (req.user) {
             Card.find({'Tag': req.params.tag, 'User': req.user.id}, function(err, cardList){
@@ -251,7 +228,7 @@ app.get('/byTag/:tag', (req, res) => {    // DONE
 
 
 
-app.get('/card/:id', (req, res) => {    // DONE
+app.get('/card/:id', (req, res) => {
     try {
         if (req.user) {
             Card.findById(req.params.id, function (err, result) {
@@ -259,7 +236,6 @@ app.get('/card/:id', (req, res) => {    // DONE
                     res.send('Server error: ' + err);
                 }
                 if (result.User == req.user.id) {
-                    //console.log(result.User);
                     console.log(result);
                     res.send(result);
                 } else {
@@ -275,14 +251,13 @@ app.get('/card/:id', (req, res) => {    // DONE
     }
 })
 
-app.get('/delete/:id', (req, res) => {    // DONE
+app.get('/delete/:id', (req, res) => {
     try {
         if (req.user) {
             Card.findByIdAndDelete(req.params.id, function(err, result){
                 if (err) {
                     res.send('Server error: ' + err);
                 }
-                //console.log(result);
                 res.send('Card delete');
             })
         } else {
@@ -297,7 +272,7 @@ app.get('/delete/:id', (req, res) => {    // DONE
 
 
 
-app.post('/edit', (req, res) => {    // DONE
+app.post('/edit', (req, res) => {
     try {
         if (req.user) {
             const Id = req.body.id;
@@ -326,7 +301,7 @@ app.post('/edit', (req, res) => {    // DONE
     }
 })
 
-app.post('/create', (req, res) => {    // DONE
+app.post('/create', (req, res) => {
     try {
         if (req.user) {
             const Title = req.body.title;
@@ -356,7 +331,3 @@ app.post('/create', (req, res) => {    // DONE
         console.log(e);
     }
 })
-
-
-
-module.exports = router
