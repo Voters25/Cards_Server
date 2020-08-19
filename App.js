@@ -51,11 +51,8 @@ app.use(bodyParser.json());
         prefix: '_session_'
       })
 })); */
-app.use(session({
-    secret: process.env.EXPRESS_SECRET
-}));
 
-//app.use(session({ secret: 'anything' }));
+app.use(session({ secret: 'anything' }));
 app.use(passport.initialize());
 app.use(passport.session());
 
