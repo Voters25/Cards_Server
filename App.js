@@ -17,16 +17,16 @@ const app = express();
 
 const port = 5000;
 app.listen(process.env.PORT || port);
-let frontServer = process.env.FRONTSERVER || 'http://localhost:3000'
+let frontServer = process.env.FRONTSERVER || 'http://localhost:3000';
 /* app.listen(port, () => {
     console.log('Start on ' + port);
 }) */
 
-const login = 'Voters25';
-const password = 'Voters25';
+process.env.DBLOGIN = 'Voters25';
+process.env.DBPASS = 'Voters25';
 const dbname = 'Cards-data';
 
-mongoose.connect(`mongodb+srv://${login}:${password}@cluster0.m8p3z.mongodb.net/${dbname}`, {
+mongoose.connect(`mongodb+srv://${process.env.DBLOGIN}:${process.env.DBPASS}@cluster0.m8p3z.mongodb.net/${dbname}`, {
     useUnifiedTopology: true,
     useNewUrlParser: true
 }, () => {console.log("Db start")});
