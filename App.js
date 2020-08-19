@@ -28,7 +28,9 @@ const dbname = 'Cards-data';
 
 mongoose.connect(`mongodb+srv://${process.env.DBLOGIN}:${process.env.DBPASS}@cluster0.m8p3z.mongodb.net/${dbname}`, {
     useUnifiedTopology: true,
-    useNewUrlParser: true
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useFindAndModify: false
 }, () => {console.log("Db start")});
 
 app.use(cors({ credentials: true, origin: frontServer }));
