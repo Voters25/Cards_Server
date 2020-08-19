@@ -8,6 +8,7 @@ const cardSheme = new Schema({
     Content: String,
     Tag: String,
     Date: String,
+    User: String
 })
 
 module.exports = model('Card', cardSheme)

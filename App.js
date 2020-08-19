@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const cookieSession = require('cookie-session');
+//const cookieSession = require('cookie-session');
 const multipart = require('connect-multiparty');
 const multipartMiddleware = multipart();
 const bcrypt = require('bcrypt');
@@ -44,7 +44,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-
+app.use(session({ secret: 'anything' }));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -57,18 +57,11 @@ const Card = require('./model/card')
 //const User = mongoose.model("User", userSheme);
 
 
-app.use(cookieSession({
+/* app.use(cookieSession({
     name: 'session',
     keys: ['secret'],
-}))
+})) */
 
-//require('./passport/passport')(passport);
-
-/* const expressSession = require('express-session')({
-    secret: 'secret',
-    resave: false,
-    saveUninitialized: false
-  }); */
 
 /* app.use(session({
     secret: 'secret',
@@ -186,9 +179,9 @@ app.post('/Registration', (req, res) => {
 
 app.get('/Logout', function (req, res) {
 
-        //req.logout();
+        req.logout();
         //req.session.destroy();
-        req.session = null;
+        //req.session = null;
         res.send('Succses');
 
 })
@@ -198,24 +191,28 @@ app.get('/Logout', function (req, res) {
 
 app.get('/list', (req, res) => {
     try {
-        Card.find(function(err, cardList){
-            if (err) {
-                res.send('Server error: ' + err);
-            }
-            let tags = []
-            cardList.map(element => {
-                if (element.Tag !== '') {
-                    tags.push(element.Tag);
+        if (req.user) {
+            Card.find(function(err, cardList){
+                if (err) {
+                    res.send('Server error: ' + err);
                 }
-            });
-            let tagList = Array.from(new Set(tags));
-            tagList.sort();
-            
-            console.log(tagList);
-            console.log(cardList);
-            res.send({cardList, tagList});
-        })
-        //res.send(result);
+                let tags = []
+                cardList.map(element => {
+                    if (element.Tag !== '') {
+                        tags.push(element.Tag);
+                    }
+                });
+                let tagList = Array.from(new Set(tags));
+                tagList.sort();
+                
+                console.log(tagList);
+                console.log(cardList);
+                res.send({cardList, tagList});
+            })
+        } else {
+            res.status(500).send('Error login')
+        }
+
     } catch (e) {
         console.log(e);
     }
