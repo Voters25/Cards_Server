@@ -16,9 +16,11 @@ const LocalStrategy = require('passport-local').Strategy;
 const app = express();
 
 const port = 5000;
-app.listen(port, () => {
+app.listen(process.env.PORT || port);
+let frontServer = process.env.FRONTSERVER || 'http://localhost:3000'
+/* app.listen(port, () => {
     console.log('Start on ' + port);
-})
+}) */
 
 const login = 'Voters25';
 const password = 'Voters25';
@@ -29,7 +31,7 @@ mongoose.connect(`mongodb+srv://${login}:${password}@cluster0.m8p3z.mongodb.net/
     useNewUrlParser: true
 }, () => {console.log("Db start")});
 
-app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+app.use(cors({ credentials: true, origin: frontServer }));
 app.use(multipartMiddleware);
 app.use(bodyParser.urlencoded({
     extended: false
