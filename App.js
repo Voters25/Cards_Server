@@ -7,7 +7,7 @@ const multipartMiddleware = multipart();
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 const session = require('express-session');
-const MemcachedStore = require('connect-memjs')(session); // 
+//const MemcachedStore = require('connect-memjs')(session); // УДАЛИТЬ ПО НЕНАДОБНОСТИ
 
 //--------
 const LocalStrategy = require('passport-local').Strategy;
@@ -41,7 +41,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-app.use(session({ 
+/* app.use(session({ 
     secret: 'anything',
     resave: 'false',
     saveUninitialized: 'false',
@@ -49,9 +49,9 @@ app.use(session({
         servers: [process.env.MEMCACHIER_SERVERS],
         prefix: '_session_'
       })
-}));
+})); */
 
-//app.use(session({ secret: 'anything' }));
+app.use(session({ secret: 'anything' }));
 app.use(passport.initialize());
 app.use(passport.session());
 
