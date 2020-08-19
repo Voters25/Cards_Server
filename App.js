@@ -50,8 +50,13 @@ app.use(bodyParser.json());
         prefix: '_session_'
       })
 })); */
+app.use(session({ 
+    secret: 'anything',
+    maxAge  : new Date(Date.now() + 3600000),
+    expires : new Date(Date.now() + 3600000)
+}));
 
-app.use(session({ secret: 'anything' }));
+//app.use(session({ secret: 'anything' }));
 app.use(passport.initialize());
 app.use(passport.session());
 
