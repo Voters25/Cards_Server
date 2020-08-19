@@ -189,10 +189,10 @@ app.get('/Logout', function (req, res) {
 
 
 
-app.get('/list', (req, res) => {
+app.get('/list', (req, res) => {    // DONE
     try {
         if (req.user) {
-            Card.find(function(err, cardList){
+            Card.find({'User': req.user.id}, function(err, cardList){
                 if (err) {
                     res.send('Server error: ' + err);
                 }
@@ -210,7 +210,7 @@ app.get('/list', (req, res) => {
                 res.send({cardList, tagList});
             })
         } else {
-            res.status(500).send('Error login')
+            res.status(500).send('Error login');
         }
 
     } catch (e) {
@@ -218,31 +218,32 @@ app.get('/list', (req, res) => {
     }
 })
 
-app.get('/byTag/:tag', (req, res) => {
+app.get('/byTag/:tag', (req, res) => {    // DONE
     try {
-        Card.find({'Tag': req.params.tag}, function(err, cardList){
-            if (err) {
-                res.send('Server error: ' + err);
-            }
-
-            Card.find(function(err, list){
+        if (req.user) {
+            Card.find({'Tag': req.params.tag, 'User': req.user.id}, function(err, cardList){
                 if (err) {
                     res.send('Server error: ' + err);
                 }
-                let tags = []
-                list.map(element => {
-                    if (element.Tag !== '') {
-                        tags.push(element.Tag);
+    
+                Card.find({'User': req.user.id}, function(err, list){
+                    if (err) {
+                        res.send('Server error: ' + err);
                     }
-                });
-                let tagList = Array.from(new Set(tags));
-                tagList.sort();
-
-                res.send({cardList, tagList});
+                    let tags = []
+                    list.map(element => {
+                        if (element.Tag !== '') {
+                            tags.push(element.Tag);
+                        }
+                    });
+                    let tagList = Array.from(new Set(tags));
+                    tagList.sort();
+    
+                    res.send({cardList, tagList});
+                })
             })
-        })
-
-        //res.send(result);
+        }
+        
     } catch (e) {
         console.log(e);
     }
@@ -250,30 +251,44 @@ app.get('/byTag/:tag', (req, res) => {
 
 
 
-app.get('/card/:id', (req, res) => {
+app.get('/card/:id', (req, res) => {    // DONE
     try {
-        //console.log(req.params.id);
-        Card.findById(req.params.id, function(err, result){
-            if (err) {
-                res.send('Server error: ' + err);
-            }
-            console.log(result);
-            res.send(result);
-        })
+        if (req.user) {
+            Card.findById(req.params.id, function (err, result) {
+                if (err) {
+                    res.send('Server error: ' + err);
+                }
+                if (result.User == req.user.id) {
+                    //console.log(result.User);
+                    console.log(result);
+                    res.send(result);
+                } else {
+                    res.status(500).send('Error user');
+                }
+            })
+        } else {
+            res.status(500).send('Error login');
+        }
+        
     } catch (e) {
         console.log(e);
     }
 })
 
-app.get('/delete/:id', (req, res) => {
+app.get('/delete/:id', (req, res) => {    // DONE
     try {
-        Card.findByIdAndDelete(req.params.id, function(err, result){
-            if (err) {
-                res.send('Server error: ' + err);
-            }
-            //console.log(result);
-            res.send('Card delete');
-        })
+        if (req.user) {
+            Card.findByIdAndDelete(req.params.id, function(err, result){
+                if (err) {
+                    res.send('Server error: ' + err);
+                }
+                //console.log(result);
+                res.send('Card delete');
+            })
+        } else {
+            res.status(500).send('Error login');
+        }
+        
     } catch (e) {
         console.log(e);
     }
@@ -282,50 +297,61 @@ app.get('/delete/:id', (req, res) => {
 
 
 
-app.post('/edit', (req, res) => {
+app.post('/edit', (req, res) => {    // DONE
     try {
+        if (req.user) {
+            const Id = req.body.id;
+            const Title = req.body.title;
+            const Content = req.body.content;
+            const Tag = req.body.tag;
+            const Date = req.body.date;
+            const User = req.user.id;
+    
+    
+            Card.findByIdAndUpdate(Id,
+                { _id: Id, Title: Title, Content: Content, Tag: Tag, Date: Date, User: User},
+                {new: true},
+                function (err, result) {
+                if (err) {
+                    res.send('Server error: ' + err);
+                }
+                res.send('Save card');
+            })
+        } else {
+            res.status(500).send('Error login');
+        }
+        
+    } catch (e) {
+        console.log(e);
+    }
+})
 
-        const Id = req.body.id;
-        const Title = req.body.title;
-        const Content = req.body.content;
-        const Tag = req.body.tag;
-        const Date = req.body.date;
+app.post('/create', (req, res) => {    // DONE
+    try {
+        if (req.user) {
+            const Title = req.body.title;
+            const Content = req.body.content;
+            const Tag = req.body.tag;
+            const Date = req.body.date;
+            const User = req.user.id;
 
+            const card = new Card({
+                Title: Title,
+                Content: Content,
+                Tag: Tag,
+                Date: Date,
+                User: User
+            })
 
-        Card.findByIdAndUpdate(Id,
-            { _id: Id, Title: Title, Content: Content, Tag: Tag, Date: Date},
-            {new: true},
-            function (err, result) {
-            if (err) {
-                res.send('Server error: ' + err);
-            }
+            card.save(function (err) {
+                if (err) return console.log(err);
+                console.log("Save card", card);
+            });
             res.send('Save card');
-        })
-    } catch (e) {
-        console.log(e);
-    }
-})
+        } else {
+            res.status(500).send('Error login');
+        }
 
-app.post('/create', (req, res) => {
-    try {
-
-        const Title = req.body.title;
-        const Content = req.body.content;
-        const Tag = req.body.tag;
-        const Date = req.body.date;
-
-        const card = new Card({
-            Title: Title,
-            Content: Content,
-            Tag: Tag,
-            Date: Date
-        })
-
-        card.save(function (err) {
-            if (err) return console.log(err);
-            console.log("Save card", card);
-        });
-        res.send('Save card');
     } catch (e) {
         console.log(e);
     }
