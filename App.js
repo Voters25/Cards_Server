@@ -81,7 +81,7 @@ app.use(
 
 app.enable('trust proxy');
 
-/* app.use(session({
+app.use(session({
     secret: 'anything',
     resave: true,
     saveUninitialized: true,
@@ -91,9 +91,8 @@ app.enable('trust proxy');
         maxAge: 3600000,
         store: new MongoStore({ url: config.DB_URL })
     }
-})); */
+}));
 
-app.use(session({ secret: 'anything', proxy: true }));
 
 //app.use(session({ secret: 'anything' }));
 
