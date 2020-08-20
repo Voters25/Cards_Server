@@ -62,6 +62,7 @@ app.use(session({
         secure: true,
         domain: ".herokuapp.com", // rem this
         httpOnly: true
+    }
 }));
 app.use(passport.initialize());
 app.use(passport.session());
