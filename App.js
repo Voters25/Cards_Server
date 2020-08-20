@@ -52,7 +52,7 @@ app.use(bodyParser.json());
       })
 })); */
 
-app.use(session({ secret: 'anything' }));
+app.use(session({ secret: 'anything', domain: '.herokuapp.com' }));
 app.use(passport.initialize());
 app.use(passport.session());
 
