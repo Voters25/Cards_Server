@@ -60,7 +60,7 @@ app.use(session({
     cookie: {
         //path: "/",
         secure: true,
-        domain: ".herokuapp.com", // rem this
+        //domain: ".herokuapp.com", // rem this
         httpOnly: true
     }
 }));
