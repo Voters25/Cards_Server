@@ -63,9 +63,15 @@ app.use(bodyParser.json());
     }
 })); */
 
+app.set('trust proxy', 1)
+app.use(session({ 
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true }
+}));
 
-
-app.use(session({ secret: 'anything' }));
+//app.use(session({ secret: 'anything' }));
 
 app.use(passport.initialize());
 app.use(passport.session());
