@@ -62,8 +62,8 @@ app.use(bodyParser.json());
         httpOnly: true
     }
 })); */
-process.env.SESSION_SECRET = 'cayboard cat';
 
+/* process.env.SESSION_SECRET = 'cayboard cat';
 app.set('trust proxy', 1)
 app.use(
     session({
@@ -77,7 +77,23 @@ app.use(
             maxAge: null,
         },
     })
-);
+); */
+
+app.enable('trust proxy');
+
+/* app.use(session({
+    secret: 'anything',
+    resave: true,
+    saveUninitialized: true,
+    proxy: true, // add this line
+    cookie: {
+        secure: true,
+        maxAge: 3600000,
+        store: new MongoStore({ url: config.DB_URL })
+    }
+})); */
+
+app.use(session({ secret: 'anything', proxy: true }));
 
 //app.use(session({ secret: 'anything' }));
 
