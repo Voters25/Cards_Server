@@ -58,7 +58,7 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     cookie: {
-        path: "/",
+        //path: "/",
         secure: true,
         domain: ".herokuapp.com", // rem this
         httpOnly: true
