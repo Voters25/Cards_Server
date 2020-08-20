@@ -9,6 +9,7 @@ const passport = require('passport');
 const session = require('express-session');
 //const MemcachedStore = require('connect-memjs')(session); // УДАЛИТЬ ПО НЕНАДОБНОСТИ
 const cookieParser = require('cookie-parser');  // УДАЛИТЬ ПО НЕНАДОБНОСТИ
+const MongoStore = require('connect-mongo')(session);   // --==--==--==--==--==--
 
 //--------
 const LocalStrategy = require('passport-local').Strategy;
@@ -79,6 +80,7 @@ app.use(
     })
 ); */
 
+
 app.enable('trust proxy');
 
 app.use(session({
@@ -89,9 +91,10 @@ app.use(session({
     cookie: {
         secure: true,
         maxAge: 3600000,
-        store: new MongoStore({ url: config.DB_URL })
+        store: new MongoStore({ url: `mongodb+srv://${process.env.DBLOGIN}:${process.env.DBPASS}@cluster0.m8p3z.mongodb.net/${dbname}`})
     }
 }));
+
 
 
 //app.use(session({ secret: 'anything' }));
