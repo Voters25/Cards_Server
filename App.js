@@ -19,7 +19,7 @@ const app = express();
 
 const port = 5000;
 app.listen(process.env.PORT || port);
-let frontServer = process.env.FRONTSERVER || 'http://localhost:3000';
+let frontServer = /* process.env.FRONTSERVER || */ 'http://localhost:3000';
 /* app.listen(port, () => {
     console.log('Start on ' + port);
 }) */
@@ -51,9 +51,7 @@ app.use(bodyParser.json());
         prefix: '_session_'
       })
 })); */
-
-//app.use(session({ secret: 'anything' }));
-app.use(session({ 
+/* app.use(session({ 
     secret: 'anything',
     resave: false,
     saveUninitialized: true,
@@ -63,7 +61,10 @@ app.use(session({
         //domain: ".herokuapp.com", // rem this
         httpOnly: true
     }
-}));
+})); */
+
+app.use(session({ secret: 'anything' }));
+
 app.use(passport.initialize());
 app.use(passport.session());
 
