@@ -9,6 +9,7 @@ const passport = require('passport');
 const session = require('express-session');
 //const MemcachedStore = require('connect-memjs')(session); // УДАЛИТЬ ПО НЕНАДОБНОСТИ
 const cookieParser = require('cookie-parser');  // УДАЛИТЬ ПО НЕНАДОБНОСТИ
+const RedisStore = require('connect-redis')(session)
 
 //--------
 const LocalStrategy = require('passport-local').Strategy;
@@ -19,7 +20,7 @@ const app = express();
 
 const port = 5000;
 app.listen(process.env.PORT || port);
-let frontServer = /* process.env.FRONTSERVER || */ 'http://localhost:3000';
+let frontServer = process.env.FRONTSERVER || 'http://localhost:3000';
 /* app.listen(port, () => {
     console.log('Start on ' + port);
 }) */
@@ -63,7 +64,17 @@ app.use(bodyParser.json());
     }
 })); */
 
-app.use(session({ secret: 'anything' }));
+
+app.use(session({  
+    store: new RedisStore({
+      url: config.redisStore.url
+    }),
+    secret: config.redisStore.secret,
+    resave: false,
+    saveUninitialized: false
+  }))
+
+//app.use(session({ secret: 'anything' }));
 
 app.use(passport.initialize());
 app.use(passport.session());
