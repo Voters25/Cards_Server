@@ -9,7 +9,6 @@ const passport = require('passport');
 const session = require('express-session');
 //const MemcachedStore = require('connect-memjs')(session); // УДАЛИТЬ ПО НЕНАДОБНОСТИ
 const cookieParser = require('cookie-parser');  // УДАЛИТЬ ПО НЕНАДОБНОСТИ
-const RedisStore = require('connect-redis')(session)
 
 //--------
 const LocalStrategy = require('passport-local').Strategy;
@@ -65,16 +64,8 @@ app.use(bodyParser.json());
 })); */
 
 
-app.use(session({  
-    store: new RedisStore({
-      url: config.redisStore.url
-    }),
-    secret: config.redisStore.secret,
-    resave: false,
-    saveUninitialized: false
-  }))
 
-//app.use(session({ secret: 'anything' }));
+app.use(session({ secret: 'anything' }));
 
 app.use(passport.initialize());
 app.use(passport.session());
