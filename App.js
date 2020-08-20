@@ -62,6 +62,7 @@ app.use(bodyParser.json());
         httpOnly: true
     }
 })); */
+process.env.SESSION_SECRET = 'cayboard cat';
 
 app.set('trust proxy', 1)
 app.use(
