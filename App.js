@@ -8,8 +8,8 @@ const bcrypt = require('bcrypt');
 const passport = require('passport');
 const session = require('express-session');
 //const MemcachedStore = require('connect-memjs')(session); // УДАЛИТЬ ПО НЕНАДОБНОСТИ
-const cookieParser = require('cookie-parser');  // УДАЛИТЬ ПО НЕНАДОБНОСТИ
-const MongoStore = require('connect-mongo')(session);   // --==--==--==--==--==--
+//const cookieParser = require('cookie-parser');  // УДАЛИТЬ ПО НЕНАДОБНОСТИ
+//const MongoStore = require('connect-mongo')(session);   // --==--==--==--==--==--
 
 //--------
 const LocalStrategy = require('passport-local').Strategy;
@@ -52,37 +52,9 @@ app.use(bodyParser.json());
         prefix: '_session_'
       })
 })); */
-/* app.use(session({ 
-    secret: 'anything',
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-        //path: "/",
-        secure: true,
-        //domain: ".herokuapp.com", // rem this
-        httpOnly: true
-    }
-})); */
-
-/* process.env.SESSION_SECRET = 'cayboard cat';
-app.set('trust proxy', 1)
-app.use(
-    session({
-        secret: process.env.SESSION_SECRET,
-        resave: false,
-        saveUninitialized: true,
-        cookie: {
-            path: '/',
-            httpOnly: true,
-            secure: false,
-            maxAge: null,
-        },
-    })
-); */
 
 
-app.enable('trust proxy');
-
+/* app.enable('trust proxy');
 app.use(session({
     secret: 'anything',
     resave: true,
@@ -91,13 +63,18 @@ app.use(session({
     cookie: {
         secure: true,
         maxAge: 3600000,
-        store: new MongoStore({ url: `mongodb+srv://${process.env.DBLOGIN}:${process.env.DBPASS}@cluster0.m8p3z.mongodb.net/${dbname}`})
+        store: new MongoStore({ url: `mongodb+srv://${process.env.DBLOGIN}:${process.env.DBPASS}@cluster0.m8p3z.mongodb.net/${dbname}?retryWrites=true&w=majority`})
     }
-}));
+})); */
+
+/* app.use(session({
+    secret: 'secret',
+    resave: false,
+    saveUninitialized: false
+})) */
 
 
-
-//app.use(session({ secret: 'anything' }));
+app.use(session({ secret: 'anything' }));
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -105,11 +82,6 @@ app.use(passport.session());
 const User = require('./model/user')
 const Card = require('./model/card')
 
-/* app.use(session({
-    secret: 'secret',
-    resave: false,
-    saveUninitialized: false
-})) */
 
 /*=========================================================================*/
 
@@ -121,7 +93,6 @@ function (email, password, done) {
     let query = {
         email: email
     };
-    console.log(query)//=========================================-=-=-==-=-=-=-=-=-=-=-=-==-=-=-=
     User.findOne(query, function (err, user) {
         if (err) throw err;
         if (!user) {
