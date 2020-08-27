@@ -10,6 +10,7 @@ const session = require('express-session');
 //const MemcachedStore = require('connect-memjs')(session); // УДАЛИТЬ ПО НЕНАДОБНОСТИ
 //const cookieParser = require('cookie-parser');  // УДАЛИТЬ ПО НЕНАДОБНОСТИ
 //const MongoStore = require('connect-mongo')(session);   // --==--==--==--==--==--
+const cookieSession = require('cookie-session');
 
 //--------
 const LocalStrategy = require('passport-local').Strategy;
@@ -74,13 +75,25 @@ app.use(session({
 })) */
 
 
+app.use(cookieSession({
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+    keys: ['texttt']
+}))
+
+
 app.use(session({ secret: 'anything' }));
+
+
 
 app.use(passport.initialize());
 app.use(passport.session());
 
 const User = require('./model/user')
 const Card = require('./model/card')
+
+
+
+
 
 
 /*=========================================================================*/
