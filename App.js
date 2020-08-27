@@ -77,7 +77,9 @@ app.use(session({
 
 app.use(cookieSession({
     maxAge: 30 * 24 * 60 * 60 * 1000,
-    keys: ['texttt']
+    keys: ['texttt'],
+    sameSite: 'none',
+    secure: true
 }))
 
 
