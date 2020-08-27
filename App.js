@@ -73,6 +73,10 @@ app.use(session({
     resave: false,
     saveUninitialized: false
 })) */
+/* app.use(cookieSession({
+    name: 'session',
+    keys: ['secret'],
+})) */
 
 
 /* app.use(cookieSession({
@@ -85,10 +89,7 @@ app.use(session({
     //httpOnly: true // <--------
 }))
  */
-app.use(cookieSession({
-    name: 'session',
-    keys: ['secret'],
-}))
+
 app.use(session({ secret: 'anything' }));
 
 
