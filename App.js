@@ -78,11 +78,11 @@ app.use(session({
 app.use(cookieSession({
     maxAge: 30 * 24 * 60 * 60 * 1000,
     name: 'session',
+    secret: 'anything',// убрать?
     keys: ['secret'],
     sameSite: 'strict',
-    secure: false,
-    httpOnly: true
-    /* secure: true */
+    secure: false, // <--------
+    httpOnly: true // <--------
 }))
 
 
