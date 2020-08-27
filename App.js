@@ -6,7 +6,7 @@ const multipart = require('connect-multiparty');
 const multipartMiddleware = multipart();
 const bcrypt = require('bcrypt');
 const passport = require('passport');
-const session = require('express-session');
+//const session = require('express-session');
 //const MemcachedStore = require('connect-memjs')(session); // УДАЛИТЬ ПО НЕНАДОБНОСТИ
 //const cookieParser = require('cookie-parser');  // УДАЛИТЬ ПО НЕНАДОБНОСТИ
 //const MongoStore = require('connect-mongo')(session);   // --==--==--==--==--==--
@@ -75,18 +75,21 @@ app.use(session({
 })) */
 
 
-app.use(cookieSession({
+/* app.use(cookieSession({
     maxAge: 30 * 24 * 60 * 60 * 1000,
     name: 'session',
-    secret: 'anything',// убрать?
+    //secret: 'anything',// убрать?
     keys: ['secret'],
     sameSite: 'lax',
-    secure: false, // <--------
-    httpOnly: true // <--------
+    //secure: false, // <--------
+    //httpOnly: true // <--------
 }))
-
-
-app.use(session({ secret: 'anything' }));
+ */
+app.use(cookieSession({
+    name: 'session',
+    keys: ['secret'],
+}))
+//app.use(session({ secret: 'anything' }));
 
 
 
