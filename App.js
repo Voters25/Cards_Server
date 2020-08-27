@@ -77,13 +77,14 @@ app.use(session({
 
 app.use(cookieSession({
     maxAge: 30 * 24 * 60 * 60 * 1000,
-    keys: ['texttt'],
+    name: 'session',
+    keys: ['secret'],
     sameSite: 'None',
     /* secure: true */
 }))
 
 
-app.use(session({ secret: 'anything' }));
+//app.use(session({ secret: 'anything' }));
 
 
 
