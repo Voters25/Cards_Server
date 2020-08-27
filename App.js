@@ -80,7 +80,7 @@ app.use(cookieSession({
     name: 'session',
     secret: 'anything',// убрать?
     keys: ['secret'],
-    sameSite: 'strict',
+    sameSite: 'lax',
     secure: false, // <--------
     httpOnly: true // <--------
 }))
