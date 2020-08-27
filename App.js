@@ -21,7 +21,7 @@ const app = express();
 const port = 5000;
 app.listen(process.env.PORT || port);
 //let frontServer = process.env.FRONTSERVER || 'http://localhost:3000';
-let frontServer = process.env.FRONTSERVER || 'http://176.96.143.250:3000';
+let frontServer = process.env.FRONTSERVER || 'http://176.96.143.250';
 /* app.listen(port, () => {
     console.log('Start on ' + port);
 }) */
