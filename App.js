@@ -80,7 +80,8 @@ app.use(cookieSession({
     name: 'session',
     keys: ['secret'],
     sameSite: 'None',
-    secure: false
+    secure: false,
+    httpOnly: true
     /* secure: true */
 }))
 
