@@ -97,7 +97,7 @@ app.use(cookieSession({
     keys: ['secret'],
     sameSite: 'none',
     secure: false,
-    httpOnly: false
+    domain: 'https://card-client.herokuapp.com/'
 }))
 
 /* app.use(session({
