@@ -164,9 +164,9 @@ passport.deserializeUser(function (id, done) {
 
 app.get('/HaveAUser', function (req, res) {
     if (req.user) {
-        res.send({ email: req.user.email, error: undefined });
+        res.send({ email: req.user.email, error: '' });
     } else {
-        res.send({error: 'Error login'});
+        res.send({ email: '', error: 'Error login' });
     }
 })
 
