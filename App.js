@@ -7,9 +7,6 @@ const multipartMiddleware = multipart();
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 const session = require('express-session');
-//const MemcachedStore = require('connect-memjs')(session); // УДАЛИТЬ ПО НЕНАДОБНОСТИ
-//const cookieParser = require('cookie-parser');  // УДАЛИТЬ ПО НЕНАДОБНОСТИ
-//const MongoStore = require('connect-mongo')(session);   // --==--==--==--==--==--
 const cookieSession = require('cookie-session');
 
 //--------
@@ -22,13 +19,8 @@ const port = 5000;
 app.listen(process.env.PORT || port);
 //let frontServer = process.env.FRONTSERVER || 'http://localhost:3000';
 let frontServer = process.env.FRONTSERVER || 'https://card-client.herokuapp.com';
-/* app.listen(port, () => {
-    console.log('Start on ' + port);
-}) */
 
-process.env.DBLOGIN = 'Voters25';
-process.env.DBPASS = 'Voters25';
-const dbname = 'Cards-data';
+const dbname = process.env.DB_NAME;
 
 mongoose.connect(`mongodb+srv://${process.env.DBLOGIN}:${process.env.DBPASS}@cluster0.m8p3z.mongodb.net/${dbname}`, {
     useUnifiedTopology: true,
@@ -44,54 +36,6 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-/* app.use(session({ 
-    secret: 'anything',
-    resave: 'false',
-    saveUninitialized: 'false',
-    store: new MemcachedStore({
-        servers: [process.env.MEMCACHIER_SERVERS],
-        prefix: '_session_'
-      })
-})); */
-
-
-/* app.enable('trust proxy');
-app.use(session({
-    secret: 'anything',
-    resave: true,
-    saveUninitialized: true,
-    proxy: true, // add this line
-    cookie: {
-        secure: true,
-        maxAge: 3600000,
-        store: new MongoStore({ url: `mongodb+srv://${process.env.DBLOGIN}:${process.env.DBPASS}@cluster0.m8p3z.mongodb.net/${dbname}?retryWrites=true&w=majority`})
-    }
-})); */
-
-/* app.use(session({
-    secret: 'secret',
-    resave: false,
-    saveUninitialized: false
-})) */
-/* app.use(cookieSession({
-    name: 'session',
-    keys: ['secret'],
-})) */
-
-
-/* app.use(cookieSession({
-    maxAge: 30 * 24 * 60 * 60 * 1000,
-    name: 'session',
-    //secret: 'anything',// убрать?
-    keys: ['secret'],
-    sameSite: 'lax',
-    //secure: false, // <--------
-    //httpOnly: true // <--------
-}))
- */
-
-//app.use(session({ secret: 'anything' }));
-
 app.use(cookieSession({
     maxAge: 30 * 24 * 60 * 60 * 1000,
     keys: ['secret'],
@@ -100,9 +44,6 @@ app.use(cookieSession({
     secureProxy: true
 }))
 
-/* app.use(session({
-    secret: 'anything'
-})); */
 
 
 
