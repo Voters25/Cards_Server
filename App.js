@@ -9,10 +9,7 @@ const passport = require('passport');
 const session = require('express-session');
 const cookieSession = require('cookie-session');
 
-//--------
 const LocalStrategy = require('passport-local').Strategy;
-//--------
-
 
 const app = express();
 const port = 5000;
